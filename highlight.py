@@ -7,8 +7,7 @@ import os
 import folium 
 from config import  rootpaths, extension, exclude, include , highlight
 from folium import plugins
-
-
+from meta_data_safecam import get_gps
 from utils import compress_pos
 
 import webbrowser
@@ -27,16 +26,16 @@ def main(videos):
         if base in seen:
             continue
         seen.add(base)
-        vid = x.replace(".MP4",".csv")
+        # vid = x.replace(".MP4",".csv")
         try:
 
-            df=pd.read_csv(vid)
+            df,_ = get_gps(x)
             df = df[df["Position"]!='N0.00000E0.00000']
-            df=df.drop_duplicates(subset=['Position'])
+            df = df.drop_duplicates(subset=['Position'])
             df.reset_index(inplace=True)
-            
-            position=[(posi,fra) for posi,fra in zip(df["Position"],df["Frame"] )]
-            position=compress_pos(position)
+
+            position = [(posi,fra) for posi,fra in zip(df["Position"],df["Frame"] )]
+            position = compress_pos(position)
 
         except Exception as ex:
             if '[Errno 2]'  in str(ex):

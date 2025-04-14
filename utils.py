@@ -3,6 +3,7 @@ import glob
 import pandas as pd
 from config import  rootpaths, extension, exclude, include 
 import os
+import folium
 def compress_pos(x):
     n =[ x[0]]
     ratio = None
@@ -46,4 +47,12 @@ def get_videos():
     videos=filter_videos(videos,include,exclude)
     videos.sort()
     return videos
+
+
+# def plotkmz(x):
+
+
+
+
+
 filterd_videos = get_videos()

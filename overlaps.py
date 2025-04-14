@@ -1,6 +1,6 @@
 
 from geo import geo_split
-
+from meta_data_safecam import get_gps
 import glob
 import pandas as pd
 import os
@@ -36,9 +36,9 @@ def main(videos):
         videoss.add(x)
         seen.add(base)
 
-        vid = x.replace(".MP4",".csv")
+        # vid = x.replace(".MP4",".csv")
         try:
-            df=pd.read_csv(vid)
+            df,_ = get_gps(x)
             df = df[df["Position"]!='N0.00000E0.00000']
             df=df.drop_duplicates(subset=['Position'])
             df.reset_index(inplace=True)
