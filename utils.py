@@ -3,7 +3,7 @@ import glob
 import pandas as pd
 from config import  rootpaths, extension, exclude, include 
 import os
-import folium
+from xml.etree import ElementTree as ET
 def compress_pos(x):
     n =[ x[0]]
     ratio = None
@@ -44,12 +44,36 @@ def get_videos():
     for rootpath in rootpaths:
         for ext in extension:
             videos += list(glob.glob(os.path.join(rootpath,"**",f"*{ext}"),recursive=True))
+    
     videos=filter_videos(videos,include,exclude)
     videos.sort()
     return videos
 
 
-# def plotkmz(x):
+def plotkmz(kmz_files ):
+    import zipfile
+    import simplekml
+    lines = []
+    for kmz_file in kmz_files:
+        with zipfile.ZipFile(kmz_file, 'r') as z:
+            kml_filename = [f for f in z.namelist() if f.endswith('.kml')][0]
+            kml_data = z.read(kml_filename)
+            root = ET.fromstring(kml_data)
+
+            # KML namespace hack to work with default namespace
+            ns = {'kml': 'http://www.opengis.net/kml/2.2'}
+
+            # Step 3: Extract LineString coordinates
+            
+            for linestring in root.findall(".//kml:LineString", ns):
+                coords_text = linestring.find("kml:coordinates", ns).text.strip()
+                coords = []
+                for coord in coords_text.split():
+                    lon, lat, *_ = map(float, coord.split(","))
+                    coords.append((lat, lon))  # folium uses (lat, lon)
+                lines.append(coords)
+    return lines
+
 
 
 

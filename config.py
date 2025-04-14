@@ -6,3 +6,6 @@ include = ['501'] ###### [''] include everything, ['apple'] include if apple pre
 exclude = [] #### [] exclude noting, ['sun'] exclude if sun present in path
 
 highlight = ['7-28'] ### denoted with pink color 
+
+scope = ['/home/tl028/Downloads/04_04_2025/scope_202.kmz']
+
