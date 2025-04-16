@@ -15,7 +15,7 @@ import webbrowser
 
 def main(videos):
 
-
+    video_count = 0
     segments=[]
     seen = set()
     print("total videos",len(videos))
@@ -43,7 +43,9 @@ def main(videos):
 
             print(ex)
             continue
-        color = '#009BFF'
+        color = '#009BFF' if video_count %2 ==0 else '#00CBFF'
+        video_count+=1
+        
         rad =2
         for light in highlight:
             if light in x:
