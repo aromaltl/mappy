@@ -3,3 +3,5 @@ pandas
 numpy
 pybind11
 geopac
+opencv-python
+simplekml
