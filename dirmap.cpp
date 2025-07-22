@@ -45,8 +45,8 @@ class lineSegment{
         : xa(xa), ya(ya), xb(xb), yb(yb), vname(vname), strf(strf), endf(endf)
         {
 	        // this->xa=xa;this->ya=ya;
-            if (xb - xa == 0 ) xb+=0.00001;
-            if (yb - ya == 0 ) yb+=0.00001;
+            if (xb - xa == 0 ) xb+=0.000001;
+            if (yb - ya == 0 ) yb+=0.000001;
             m = (yb - ya) / (xb - xa);
             teeta = atan2((yb - ya),(xb - xa));
             c = ya - m * xa;
