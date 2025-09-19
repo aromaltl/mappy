@@ -50,10 +50,11 @@ class lineSegment{
 	        // this->xa=xa;this->ya=ya;
             if (xb - xa == 0 ) xb+=0.000001;
             if (yb - ya == 0 ) yb+=0.000001;
+            double correction = cos(xa * PI/180);
             m = (yb - ya) / (xb - xa);
-            teeta = atan2((yb - ya),(xb - xa));
+            teeta = atan2(correction*(yb - ya),(xb - xa));
             c = ya - m * xa;
-            rt1plusm2 = sqrt(1 + m*m);
+            rt1plusm2 = sqrt(1 + pow(m*correction,2.0));
             if (xb<xa){
                 LT[0]=xa;LT[1]=xb;
             }
