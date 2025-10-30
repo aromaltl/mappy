@@ -41,7 +41,8 @@ def main(videos):
             
             position=[(posi,fra,tim) for posi,fra,tim in zip(df["Position"],df["Frame"],df["Time"])]
             position=compress_pos(position)
-            startpos.append(geo_split(position[0][0]))
+            
+            startpos.append([geo_split(position[0][0]),x])
 
         except Exception as ex:
             if '[Errno 2]'  in str(ex):
@@ -96,7 +97,7 @@ def main(videos):
         if index % 4 ==0:
             folium.CircleMarker(x[0:2],popup=folium.Popup(str(x[4:-1])),**{'radius':2,'fill':True,'opacity':1,'color' : 'green'}).add_to(m)
     for i in startpos:
-        folium.CircleMarker(i,popup=folium.Popup(str(x[4:-1])),**{'radius':1,'fill':True,'opacity':1,'color' : 'red'}).add_to(m)
+        folium.CircleMarker(i[0],popup=folium.Popup(str(i[1])),**{'radius':1,'fill':True,'opacity':1,'color' : 'red'}).add_to(m)
     for x in counter:
         df["video"].append(x.split("=")[-1])
         df["lane"].append("Blue" if counter[x]["blue"] > counter[x]["green"] else "Green")
