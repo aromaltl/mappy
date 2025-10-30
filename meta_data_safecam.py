@@ -11,6 +11,24 @@ import geo
 import time
 import subprocess
 
+def seconds_to_hms(total_seconds):
+    total_seconds =int(total_seconds)
+    """
+    Convert seconds to hours:minutes:seconds format
+    
+    Args:
+        total_seconds: Total number of seconds (int or float)
+    
+    Returns:
+        String in format "HH:MM:SS"
+    """
+    hours = int(total_seconds // 3600)
+    remaining = total_seconds % 3600
+    minutes = int(remaining // 60)
+    seconds = int(remaining % 60)
+    
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
 # arguments = config.getArgs()
 def decdeg2dms(dd):
     is_positive = dd >= 0
@@ -69,7 +87,13 @@ def get_gps(video_path):
     try:
         if os.path.exists(video_path.replace(".MP4",".csv")):
             print("exists")
-            return pd.read_csv(video_path.replace(".MP4",".csv")),True
+            cap = cv2.VideoCapture(video_path)
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+            cap.release()
+            final_df =pd.read_csv(video_path.replace(".MP4",".csv"))
+            final_df["Time"]= final_df["Frame"].apply(lambda x : seconds_to_hms(x/fps))
+            return final_df,True
         
         tool_path = 'Image-ExifTool-12.22/exiftool'
         # os.system('{} -ee -G3 "{}" > metadata.txt'.format(tool_path, video_path))
@@ -187,7 +211,8 @@ def get_gps(video_path):
     
         final_df = pd.DataFrame(final_df)
         if video_path[-4:] == ".MP4":
-            final_df.to_csv(video_path.replace('.MP4', '.csv')) 
+            final_df.to_csv(video_path.replace('.MP4', '.csv'))
+        final_df["Time"]= final_df["Frame"].apply(lambda x : seconds_to_hms(x/fps))
         return final_df, True
     except Exception as ex:
         print(ex)

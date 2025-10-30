@@ -44,7 +44,7 @@ def main(videos):
             df.reset_index(inplace=True)
             
             
-            position=[(posi,fra) for posi,fra in zip(df["Position"],df["Frame"])]
+            position=[(posi,fra,tim) for posi,fra,tim in zip(df["Position"],df["Frame"],df["Time"])]
             position=compress_pos(position)
 
             
@@ -60,6 +60,7 @@ def main(videos):
             B=geo_split(position[xx+1][0])
             stfr =int(position[xx][1])
             endfr = int(position[xx+1][1])
+            time = position[xx][2]
 
             if A == B:
                 continue
@@ -69,7 +70,7 @@ def main(videos):
             if x not in video_start:
                 video_start[x]=A
 
-            mm.addline(A[0],A[1],B[0],B[1],x,stfr,endfr)
+            mm.addline(A[0],A[1],B[0],B[1],f"{x}[{time}]",stfr,endfr)
     i=mm.getall()
 
     if len(i[0])>0:

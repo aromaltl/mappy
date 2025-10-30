@@ -21,8 +21,8 @@ def main(videos):
     print("total videos",len(videos),)
     duplicate = 0
     ovrlapped = set()
-    m = maps(0.00055,2.4)
-
+    m = maps(0.001,2.4)
+    startpos = []
     for x in videos:
         base = os.path.basename(x)
         if base in seen:
@@ -39,8 +39,9 @@ def main(videos):
             df=df.drop_duplicates(subset=['Position'])
             df.reset_index(inplace=True)
             
-            position=[(posi,fra) for posi,fra in zip(df["Position"],df["Frame"])]
+            position=[(posi,fra,tim) for posi,fra,tim in zip(df["Position"],df["Frame"],df["Time"])]
             position=compress_pos(position)
+            startpos.append(geo_split(position[0][0]))
 
         except Exception as ex:
             if '[Errno 2]'  in str(ex):
@@ -53,6 +54,7 @@ def main(videos):
             B=geo_split(position[xx+1][0])
             stfr =int(position[xx][1])
             endfr = int(position[xx+1][1])
+            time = position[xx][2]
             # csvss["video"].append(x)
             # csvss["Position"].append(A)
             # break
@@ -62,7 +64,7 @@ def main(videos):
             manhdis = abs(A[0]-B[0])+abs(A[1]-B[1])
             if manhdis > 0.006:
                 continue
-            m.addline(A[0],A[1],B[0],B[1],x,stfr,endfr)
+            m.addline(A[0],A[1],B[0],B[1],f"{x}[{time}]",stfr,endfr)
     i=m.getall()
 
     # if len(i[0])==0:
@@ -93,7 +95,8 @@ def main(videos):
             # folium.PolyLine(locations=[x[0:2],x[2:4]],opacity=0.7,smooth_factor=0.5, color='#00FFFF').add_to(m)
         if index % 4 ==0:
             folium.CircleMarker(x[0:2],popup=folium.Popup(str(x[4:-1])),**{'radius':2,'fill':True,'opacity':1,'color' : 'green'}).add_to(m)
-
+    for i in startpos:
+        folium.CircleMarker(i,popup=folium.Popup(str(x[4:-1])),**{'radius':1,'fill':True,'opacity':1,'color' : 'red'}).add_to(m)
     for x in counter:
         df["video"].append(x.split("=")[-1])
         df["lane"].append("Blue" if counter[x]["blue"] > counter[x]["green"] else "Green")
