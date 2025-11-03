@@ -160,8 +160,8 @@ class maps{
                     if  (abs(B[0])< DIST && segb->validate(B) && angle(&segb->teeta,&currentseg->teeta) > TEETA){
                         // std::cout<<"####$$$";
                         // if (sega->validate_merge(A,B)){
-                            // delete currentseg;
-                            dupli.push_back(currentseg);
+                            delete currentseg;
+                            // dupli.push_back(currentseg);
                             return false;
                         // }
                         

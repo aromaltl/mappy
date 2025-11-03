@@ -1,0 +1,5 @@
+Image-*
+*.json
+config.py
+*.so
+results/
