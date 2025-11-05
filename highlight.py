@@ -5,7 +5,9 @@ import glob
 import pandas as pd
 import os
 import folium 
-from config import  rootpaths, extension, exclude, include ,scope , highlight
+# from config import  rootpaths, extension, exclude, include ,scope , highlight
+from config_loader import load_config
+cfg = load_config()
 from folium import plugins
 from meta_data_safecam import get_gps
 from utils import compress_pos, plotkmz
@@ -47,7 +49,7 @@ def main(videos):
         video_count+=1
         
         rad =2
-        for light in highlight:
+        for light in cfg.highlight:
             if light in x:
                 color = '#FF25De'
                 rad =3
@@ -73,7 +75,7 @@ def main(videos):
                 continue
             folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color=color).add_to(m)
     if m is not None:
-        lines = plotkmz(scope)
+        lines = plotkmz(cfg.scope)
         for line in lines:
             folium.PolyLine(line, color='green').add_to(m)
         with open("results/highlight.html","w") as f:

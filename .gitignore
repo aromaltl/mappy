@@ -3,3 +3,5 @@ Image-*
 config.py
 *.so
 results/
+_pycache_/
+*.pyc

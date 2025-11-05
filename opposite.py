@@ -6,7 +6,10 @@ import glob
 import pandas as pd
 import os
 import folium 
-from config import  rootpaths, extension, exclude, include , highlight
+# from config import  rootpaths, extension, exclude, include , highlight
+from config_loader import load_config
+cfg = load_config()
+
 from folium import plugins
 
 import webbrowser
@@ -87,18 +90,14 @@ def main(videos):
                 folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':2,'fill':True,'opacity':1,'color' : 'green'}).add_to(mm)
 
                 if json_view[x][-1]:
-                    lastfr = json_view[x][-1][1]
+                    # lastfr = json_view[x][-1][1]
                     if stfr -lastfr == 0:
-                        json_view[x][-1][1] = endfr
+                        json_view[x][-1][1] = f"{time}_{endfr}"
                     else:
-                        json_view[x].append([stfr,endfr])
+                        json_view[x].append([f"{time}_{stfr}",f"{time}_{endfr}"])
                 else:
-                    json_view[x][-1]=[stfr,endfr]
-        for y in json_view[x]:
-
-            if y:
-                y[0]=f"{fr2time[y[0]]}_{y[0]}"
-                y[1]=f"{fr2time[y[1]]}_{y[1]}"
+                    json_view[x][-1]=[f"{time}_{stfr}",f"{time}_{endfr}"]
+                lastfr =endfr
 
     for i in startpos:
         folium.CircleMarker(i[0],popup=folium.Popup(str(i[1])),**{'radius':1,'fill':True,'opacity':1,'color' : 'red'}).add_to(mm)

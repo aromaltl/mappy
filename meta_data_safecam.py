@@ -210,8 +210,11 @@ def get_gps(video_path):
             final_df['Speed'].append(val['speed'][x])
     
         final_df = pd.DataFrame(final_df)
-        if video_path[-4:] == ".MP4":
-            final_df.to_csv(video_path.replace('.MP4', '.csv'))
+        try:
+            if video_path[-4:] == ".MP4":
+                final_df.to_csv(video_path.replace('.MP4', '.csv'))
+        except Exception as ex:
+            print(ex,"line217")
         final_df["Time"]= final_df["Frame"].apply(lambda x : seconds_to_hms(x/fps))
         return final_df, True
     except Exception as ex:

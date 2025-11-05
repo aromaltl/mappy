@@ -147,9 +147,15 @@ class maps{
         return arr;
     }
     
+    void forceaddline(double xa,double ya,double xb,double yb, std::string & vname, int strf,int endf){
+    	lineSegment* currentseg = new lineSegment( xa, ya, xb,yb,vname , strf,endf);
+    	unique.push_back(currentseg);
+    }
+    
     bool addline(double xa,double ya,double xb,double yb, std::string & vname, int strf,int endf){
         int i,j;
         lineSegment* currentseg = new lineSegment( xa, ya, xb,yb,vname , strf,endf);
+        
         /////
         if ((abs(xa-xb)+abs(ya-yb)) < (DIST/8)){
             unique.push_back(currentseg);
@@ -197,6 +203,7 @@ PYBIND11_MODULE(uniquemapping,m ) { // cpp_sort is module name , m is interface 
         .def(py::init<double , double>()) //  expose the class constructor function,  array as input
         .def("addline", &maps::addline) // expose the heapsort function from cpp_ class
         .def("get",&maps::get)
+        .def("forceaddline",&maps::forceaddline)
         .def("getall",&maps::getall);
     m.def("distance",&distance);
     // py::class

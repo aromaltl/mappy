@@ -4,8 +4,11 @@ import opposite
 import multiprocessing
 import os
 from utils import filterd_videos
+from meta_data_safecam import get_gps
 os.makedirs("results",exist_ok=True)
-
+for x in filterd_videos:
+	print(x)
+	get_gps(x)
 print("videos filtered")
 
 

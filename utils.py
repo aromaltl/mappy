@@ -4,6 +4,19 @@ import pandas as pd
 from config import  rootpaths, extension, exclude, include 
 import os
 from xml.etree import ElementTree as ET
+from config_loader import load_config
+cfg = load_config()
+# def find_common_start(str1, str2, index =None):
+#     if None
+#     for i in range(min(len(str1), len(str2))):
+#         if str1[i] == str2[i]:
+#             j=i
+#         else:
+#             # Mismatch found, stop appending characters.
+#             break
+#     return j
+
+
 def compress_pos(x):
     n =[ x[0]]
     ratio = None
@@ -41,11 +54,12 @@ def filter_videos(videos,include,exclude):
 def get_videos():
     videos = []
     seen =set()
-    for rootpath in rootpaths:
+    
+    for rootpath in cfg.rootpaths:
         for ext in extension:
             videos += list(glob.glob(os.path.join(rootpath,"**",f"*{ext}"),recursive=True))
     
-    videos=filter_videos(videos,include,exclude)
+    videos=filter_videos(videos,cfg.include,cfg.exclude)
     videos.sort()
     return videos
 
@@ -75,8 +89,7 @@ def plotkmz(kmz_files ):
     return lines
 
 
-
-
-
-
 filterd_videos = get_videos()
+
+
+
