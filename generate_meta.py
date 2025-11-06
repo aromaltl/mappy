@@ -12,7 +12,7 @@ from config_loader import load_config
 
 videos = filterd_videos
 meta = {}
-seen = {}
+seen = set()
 for x in videos:
     base = os.path.basename(x)
     if base in seen:
@@ -23,20 +23,21 @@ for x in videos:
         df = df[df["Position"]!='N0.00000E0.00000']
         df=df.drop_duplicates(subset=['Position'])
         df.reset_index(inplace=True)
-        position=[[geo_split(posi)] for posi in zip(df["Position"])]
+        position=[[geo_split(posi)] for posi in df["Position"]]
         position=compress_pos(position)
+        # position=[geo_split(i[0]) for i in position]
     except Exception as ex:
         print(ex)
         continue
     meta[base.replace(".MP4","")] = [x[0] for x in position ]
 
-with open("metadata.json","w") as f:
+with open("results/metadata.json","w") as f:
     json.dump(meta, f, indent=4)
 
 
 spcl = {"video_names": [x for x in meta]}
 
-with open("special_videos.json","w")  as f:
+with open("results/special_videos.json","w")  as f:
     json.dump(spcl, f, indent=4)
 
 

@@ -8,7 +8,7 @@ import pickle
 
 from config_loader import load_config
 cfg = load_config()
-from utils import compress_pos
+from utils import compress_pos ,plotkmz
 import folium      
 from folium import plugins
 import webbrowser
@@ -80,6 +80,10 @@ def main(videos):
             continue
         if m is None:
             m = folium.Map(location=geo_split(position[0][0]), zoom_start=8)
+            lines = plotkmz(cfg.scope)
+            for line in lines:
+                folium.PolyLine(line, color="#3A6600").add_to(m)
+
         
         prev = 100,100
         for xx in range(len(position)-1):
