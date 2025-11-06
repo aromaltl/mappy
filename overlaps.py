@@ -101,14 +101,14 @@ def main(videos):
                 folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color='blue').add_to(m)
                 if abs(prev[0]-A[0])+abs(prev[1]-A[1]) > 0.04:
                     prev=A
-                    folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time}]"),**{'radius':6,'fill':True,'opacity':1,'color' : 'blue'}).add_to(m)
+                    folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':6,'fill':True,'opacity':1,'color' : 'blue'}).add_to(m)
                 mm.forceaddline(A[0],A[1],B[0],B[1],x,stfr,endfr)
 
             else:      
                 if not mm.addline(A[0],A[1],B[0],B[1],x,stfr,endfr):
                     duplicate+=distance(A[0],A[1],B[0],B[1])
                     folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color='red').add_to(m)
-                    folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time}]"),**{'radius':2,'fill':True,'opacity':1,'color' : 'red'}).add_to(m)
+                    folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':2,'fill':True,'opacity':1,'color' : 'red'}).add_to(m)
                     if ovlpseg[x][-1]:
                         if stfr - lastfr ==0:
                             ovlpseg[x][-1][1] =f"{time}_{endfr}"
@@ -122,7 +122,7 @@ def main(videos):
 
                 else:
                     folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color="#8327FC").add_to(m)
-                    folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time}]"),**{'radius':2,'fill':True,'opacity':1,'color' : "#8327FC"}).add_to(m)
+                    folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':2,'fill':True,'opacity':1,'color' : "#8327FC"}).add_to(m)
                     
 
     title_html = f'<h3 align="center" style="font-size:12px"><b>Total KMs : {round(total,2)} , Duplicated KMs : {round(duplicate,2)}</b></h3>'
