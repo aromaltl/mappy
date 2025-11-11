@@ -123,8 +123,7 @@ def main(videos):
                 else:
                     folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color="#8327FC").add_to(m)
                     folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':2,'fill':True,'opacity':1,'color' : "#8327FC"}).add_to(m)
-                    
-
+        folium.CircleMarker(geo_split(position[0][0]),popup=folium.Popup(f"{x}"),**{'radius':1,'fill':True,'opacity':1,'color' : 'white'}).add_to(m)
     title_html = f'<h3 align="center" style="font-size:12px"><b>Total KMs : {round(total,2)} , Duplicated KMs : {round(duplicate,2)}</b></h3>'
     m.get_root().html.add_child(folium.Element(title_html))
 
