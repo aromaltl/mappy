@@ -13,14 +13,23 @@ import folium
 from folium import plugins
 import webbrowser
 
+
 def filtervideos(videos,highlight):
 
+    new = []
     for x in videos:
-        OLD =True
+        found = False
         for y in highlight:
-            if y in x:
-                OLD=False
-        yield OLD, x
+            if y in x: 
+                found =True 
+                break
+        if not found: # if old
+            yield True, x
+        else:
+            new.append(x)
+    for x in new:
+        yield  False ,x
+
 
 def getPos(x):
     position =None
@@ -65,7 +74,7 @@ def main(videos):
     total = 0
 
     for old,x in filtervideos(videos,cfg.highlight):
-        # print(old,x)
+        
         base = os.path.basename(x)
         if base in seen:
             continue
@@ -75,9 +84,10 @@ def main(videos):
 
         # vid = x.replace(".MP4",".csv")
         position =getPos(x)
-
+        
         if position is  None or len(position)==0:
             continue
+        print(old,x)
         if m is None:
             m = folium.Map(location=geo_split(position[0][0]), zoom_start=8)
             lines = plotkmz(cfg.scope)
@@ -104,7 +114,8 @@ def main(videos):
                     folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':6,'fill':True,'opacity':1,'color' : 'blue'}).add_to(m)
                 mm.forceaddline(A[0],A[1],B[0],B[1],x,stfr,endfr)
 
-            else:      
+            else:   
+                 
                 if not mm.addline(A[0],A[1],B[0],B[1],x,stfr,endfr):
                     duplicate+=distance(A[0],A[1],B[0],B[1])
                     folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color='red').add_to(m)
