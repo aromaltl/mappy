@@ -10,7 +10,8 @@ from config_loader import load_config
 cfg = load_config()
 from utils import compress_pos ,plotkmz
 import folium      
-from folium import plugins
+from folium import plugins 
+from folium.plugins import Search
 import webbrowser
 
 
@@ -70,7 +71,7 @@ def main(videos):
     mm = maps(0.00013,0.60)
     videoss =set()
     ovlpseg = {}
-
+    search_features = []
     total = 0
 
     for old,x in filtervideos(videos,cfg.highlight):
@@ -134,10 +135,29 @@ def main(videos):
                 else:
                     folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color="#8327FC").add_to(m)
                     folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':2,'fill':True,'opacity':1,'color' : "#8327FC"}).add_to(m)
+
         folium.CircleMarker(geo_split(position[0][0]),popup=folium.Popup(f"{x}"),**{'radius':1,'fill':True,'opacity':1,'color' : 'white'}).add_to(m)
+        feature = {
+            "type": "Feature",
+            "properties": {"name": f"{x.split('/')[-1]}"},
+            "geometry": {"type": "Point", "coordinates": geo_split(position[0][0])[::-1]}  # lon, lat
+                }
+        search_features.append(feature)
+
     title_html = f'<h3 align="center" style="font-size:12px"><b>Total KMs : {round(total,2)} , Duplicated KMs : {round(duplicate,2)}</b></h3>'
     m.get_root().html.add_child(folium.Element(title_html))
+    geojson = folium.GeoJson(
+        {"type": "FeatureCollection", "features": search_features},
+        name="Cities",
+        tooltip=folium.GeoJsonTooltip(fields=["name"]),
+        ).add_to(m)
 
+    Search(
+            layer=geojson,
+            search_label="name",
+            placeholder="Video Search",
+            collapsed=False,
+        ).add_to(m)
     overlap = set( x for x in mm.get())
     non_videoss = list(videoss- overlap)
     finaldf = pd.DataFrame({"videos":non_videoss+list(overlap),"overlap":["No"]*len(non_videoss)+["Yes"]*len(overlap)})
