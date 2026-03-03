@@ -136,7 +136,7 @@ def main(videos):
                     folium.PolyLine(locations=[A,B],opacity=0.7,smooth_factor=0.5, color="#8327FC").add_to(m)
                     folium.CircleMarker(A,popup=folium.Popup(f"{x}[{time},{stfr}]"),**{'radius':2,'fill':True,'opacity':1,'color' : "#8327FC"}).add_to(m)
 
-        folium.CircleMarker(geo_split(position[0][0]),popup=folium.Popup(f"{x}"),**{'radius':1,'fill':True,'opacity':1,'color' : 'white'}).add_to(m)
+        # folium.CircleMarker(geo_split(position[0][0]),popup=folium.Popup(f"{x}"),**{'radius':1,'fill':True,'opacity':1,'color' : 'white'}).add_to(m)
         feature = {
             "type": "Feature",
             "properties": {"name": f"{x.split('/')[-1]}"},
@@ -148,8 +148,15 @@ def main(videos):
     m.get_root().html.add_child(folium.Element(title_html))
     geojson = folium.GeoJson(
         {"type": "FeatureCollection", "features": search_features},
-        name="Cities",
+        name="Video",
         tooltip=folium.GeoJsonTooltip(fields=["name"]),
+        marker=folium.CircleMarker(), 
+        style_function=lambda x: {
+            'radius': 1,  # Smaller radius
+            'color': "#FFFFFF",
+            'fillColor': "#FFFFFF",
+            'weight': 1,
+            'opacity': 1 }
         ).add_to(m)
 
     Search(

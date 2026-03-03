@@ -6,6 +6,7 @@ import glob
 import pandas as pd
 import os
 import folium 
+from folium.plugins import Search
 # from config import  rootpaths, extension, exclude, include , highlight
 from config_loader import load_config
 cfg = load_config()
@@ -24,6 +25,7 @@ def main(videos):
     print("total videos",len(videos),)
     duplicate = 0
     ovrlapped = set()
+    search_features = []
     m = maps(0.001,2.4)
     startpos = []
     json_view = {}
@@ -100,9 +102,31 @@ def main(videos):
                 lastfr =endfr
 
     for i in startpos:
-        folium.CircleMarker(i[0],popup=folium.Popup(str(i[1])),**{'radius':1,'fill':True,'opacity':1,'color' : 'red'}).add_to(mm)
-
-            
+        # folium.CircleMarker(i[0],popup=folium.Popup(str(i[1])),**{'radius':1,'fill':True,'opacity':1,'color' : 'red'}).add_to(mm)
+        feature = {
+            "type": "Feature",
+            "properties": {"name": f"{i[1].split('/')[-1]}"},
+            "geometry": {"type": "Point", "coordinates": i[0][::-1]}  # lon, lat
+                }
+        search_features.append(feature)
+    geojson = folium.GeoJson(
+        {"type": "FeatureCollection", "features": search_features},
+        name="Video",
+        tooltip=folium.GeoJsonTooltip(fields=["name"]),
+        marker=folium.CircleMarker(), 
+        style_function=lambda x: {
+            'radius': 1,  # Smaller radius
+            'color': "#FFFFFF",
+            'fillColor': "#FFFFFF",
+            'weight': 1,
+            'opacity': 1 }
+        ).add_to(mm)
+    Search(
+        layer=geojson,
+        search_label="name",
+        placeholder="Video Search",
+        collapsed=False,
+        ).add_to(mm)
     # for x in counter:
     #     df["video"].append(x.split("=")[-1])
     #     df["lane"].append("Blue" if counter[x]["blue"] > counter[x]["green"] else "Green")
